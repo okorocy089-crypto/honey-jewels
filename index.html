@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Honey Jewels</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&family=Great+Vibes&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --gold: #F5C518;
+    --gold-dark: #C9A000;
+    --gold-light: #FDE87A;
+    --white: #FDFAF2;
+    --black: #0E0C09;
+    --gray: #6B6455;
+    --bg-cream: #FAF6EE;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Montserrat', sans-serif;
+    background: var(--white);
+    color: var(--black);
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5%;
+    height: 72px;
+    background: var(--black);
+    border-bottom: 1px solid rgba(245,197,24,0.2);
+  }
+
+  .nav-logo {
+    font-family: 'Great Vibes', cursive;
+    font-size: 2rem;
+    font-weight: 400;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2.5rem;
+    list-style: none;
+  }
+
+  .nav-links a {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--white);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+
+  .nav-links a:hover { color: var(--gold); }
+
+  .nav-hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 4px;
+  }
+
+  .nav-hamburger span {
+    display: block;
+    width: 24px;
+    height: 1.5px;
+    background: var(--white);
+    transition: all 0.3s;
+  }
+
+  /* ── HERO SLIDER ── */
+  .hero {
+    margin-top: 72px;
+    position: relative;
+    height: calc(100vh - 72px);
+    min-height: 520px;
+    overflow: hidden;
+    background: var(--black);
+  }
+
+  .slides {
+    display: flex;
+    height: 100%;
+    transition: transform 0.8s cubic-bezier(0.77,0,0.18,1);
+  }
+
+  .slide {
+    min-width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    padding: 6% 7% 8%;
+  }
+
+  .slide-bg {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    opacity: 0.45;
+    transition: opacity 0.8s;
+  }
+
+  .slide:nth-child(1) .slide-bg { background: linear-gradient(135deg, #1a1206 0%, #3d2e05 50%, #0e0c09 100%); }
+  .slide:nth-child(2) .slide-bg { background: linear-gradient(135deg, #0a0a0a 0%, #2a1f00 50%, #1a1206 100%); }
+  .slide:nth-child(3) .slide-bg { background: linear-gradient(135deg, #1a0a0a 0%, #2d1a00 50%, #0e0c09 100%); }
+  .slide:nth-child(4) .slide-bg { background: linear-gradient(135deg, #070d14 0%, #1a2a1a 50%, #0e0c09 100%); }
+  .slide:nth-child(5) .slide-bg { background: linear-gradient(135deg, #12100a 0%, #2e2500 50%, #0e0c09 100%); }
+
+  /* decorative orbs on slides */
+  .slide-orb {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.12;
+  }
+
+  .slide:nth-child(1) .slide-orb-1 { width: 380px; height: 380px; background: var(--gold); top: -80px; right: 10%; }
+  .slide:nth-child(1) .slide-orb-2 { width: 200px; height: 200px; background: var(--gold-light); top: 30%; right: 35%; }
+  .slide:nth-child(2) .slide-orb-1 { width: 500px; height: 500px; background: var(--gold); top: -150px; right: -60px; }
+  .slide:nth-child(3) .slide-orb-1 { width: 300px; height: 300px; background: var(--gold); bottom: -50px; right: 20%; }
+  .slide:nth-child(4) .slide-orb-1 { width: 420px; height: 420px; background: var(--gold); top: -100px; left: 50%; }
+  .slide:nth-child(5) .slide-orb-1 { width: 350px; height: 350px; background: var(--gold); top: 10%; right: 15%; }
+
+  .slide-content { position: relative; z-index: 2; max-width: 620px; }
+
+  .slide-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+
+  .slide-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2.2rem, 5vw, 4rem);
+    font-weight: 300;
+    color: var(--white);
+    line-height: 1.15;
+    margin-bottom: 1.2rem;
+  }
+
+  .slide-title em { font-style: italic; color: var(--gold-light); }
+
+  .slide-desc {
+    font-size: 0.78rem;
+    line-height: 1.8;
+    color: rgba(253,250,242,0.65);
+    max-width: 400px;
+    margin-bottom: 2rem;
+  }
+
+  .btn-gold {
+    display: inline-block;
+    padding: 0.75rem 2rem;
+    background: var(--gold);
+    color: var(--black);
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+  }
+
+  .btn-gold:hover { background: var(--gold-light); transform: translateY(-1px); }
+
+  .hero-dots {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 10;
+  }
+
+  .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    border: 1.5px solid var(--gold);
+    background: transparent;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  .dot.active { background: var(--gold); }
+
+  .hero-prev, .hero-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    background: none;
+    border: 1px solid rgba(245,197,24,0.4);
+    color: var(--gold);
+    width: 44px; height: 44px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.3s, background 0.3s;
+  }
+
+  .hero-prev:hover, .hero-next:hover { border-color: var(--gold); background: rgba(245,197,24,0.1); }
+  .hero-prev { left: 2rem; }
+  .hero-next { right: 2rem; }
+
+  /* ── SECTION DIVIDER ── */
+  .divider {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 3.5rem 7%;
+  }
+
+  .divider-line { flex: 1; height: 1px; background: linear-gradient(to right, transparent, var(--gold-dark), transparent); }
+
+  .divider-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 0.75rem;
+    font-style: italic;
+    letter-spacing: 0.25em;
+    color: var(--gold-dark);
+    white-space: nowrap;
+  }
+
+  /* ── PRODUCT ROWS ── */
+  .products { padding: 0 5% 5rem; }
+
+  .product-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    margin-bottom: 7rem;
+  }
+
+  .product-row:last-child { margin-bottom: 0; }
+  .product-row.reverse { direction: rtl; }
+  .product-row.reverse > * { direction: ltr; }
+
+  .product-img-wrap {
+    position: relative;
+    aspect-ratio: 4/5;
+    background: var(--bg-cream);
+    overflow: hidden;
+  }
+
+  .product-img-inner {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .product-placeholder {
+    width: 55%;
+    height: 55%;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(245,197,24,0.15) 0%, rgba(201,160,0,0.08) 100%);
+    border: 1px solid rgba(245,197,24,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .product-placeholder-icon {
+    width: 40%;
+    height: 40%;
+    border-radius: 50%;
+    border: 1px dashed rgba(245,197,24,0.5);
+  }
+
+  .product-img-tag {
+    position: absolute;
+    bottom: 1.2rem;
+    right: 1.2rem;
+    background: var(--gold);
+    color: var(--black);
+    font-size: 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 0.4rem 0.8rem;
+  }
+
+  .product-info { padding: 1rem 0; }
+
+  .product-tag {
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold-dark);
+    margin-bottom: 0.8rem;
+  }
+
+  .product-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
+    font-weight: 300;
+    line-height: 1.2;
+    margin-bottom: 1.2rem;
+    color: var(--black);
+  }
+
+  .product-name em { font-style: italic; }
+
+  .product-desc {
+    font-size: 0.78rem;
+    line-height: 1.9;
+    color: var(--gray);
+    margin-bottom: 1.8rem;
+    max-width: 380px;
+  }
+
+  .product-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--gold-dark);
+    margin-bottom: 1.5rem;
+  }
+
+  /* ── REVIEWS ── */
+  .reviews-section {
+    background: var(--black);
+    padding: 5rem 0 4rem;
+    overflow: hidden;
+  }
+
+  .reviews-header {
+    text-align: center;
+    padding: 0 5% 3rem;
+  }
+
+  .reviews-header h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
+    font-weight: 300;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+
+  .reviews-header h2 em { font-style: italic; color: var(--gold-light); }
+
+  .reviews-header p {
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    color: rgba(253,250,242,0.4);
+    text-transform: uppercase;
+  }
+
+  .reviews-track-wrap { overflow: hidden; position: relative; }
+
+  .reviews-track-wrap::before,
+  .reviews-track-wrap::after {
+    content: '';
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 120px;
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  .reviews-track-wrap::before { left: 0; background: linear-gradient(to right, var(--black), transparent); }
+  .reviews-track-wrap::after  { right: 0; background: linear-gradient(to left, var(--black), transparent); }
+
+  .reviews-track {
+    display: flex;
+    gap: 1.5rem;
+    padding: 0.5rem 0;
+    animation: scrollLeft 120s linear infinite;
+    width: max-content;
+  }
+
+  @keyframes scrollLeft {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  .review-card {
+    min-width: 300px;
+    max-width: 300px;
+    background: rgba(245,197,24,0.04);
+    border: 1px solid rgba(245,197,24,0.15);
+    padding: 1.5rem;
+    flex-shrink: 0;
+  }
+
+  .review-stars {
+    color: var(--gold);
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    margin-bottom: 0.8rem;
+  }
+
+  .review-text {
+    font-size: 0.78rem;
+    line-height: 1.8;
+    color: rgba(253,250,242,0.65);
+    margin-bottom: 1rem;
+    font-style: italic;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+  }
+
+  .review-author {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold-dark);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--black);
+    border-top: 1px solid rgba(245,197,24,0.15);
+    padding: 4rem 7% 2.5rem;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 3rem;
+    margin-bottom: 3rem;
+  }
+
+  .footer-brand {
+    font-family: 'Great Vibes', cursive;
+    font-size: 2.4rem;
+    font-weight: 400;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+  }
+
+  .footer-tagline {
+    font-size: 0.72rem;
+    line-height: 1.8;
+    color: rgba(253,250,242,0.4);
+  }
+
+  .footer-col h4 {
+    font-size: 0.62rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.2rem;
+  }
+
+  .footer-col ul { list-style: none; }
+
+  .footer-col ul li {
+    margin-bottom: 0.6rem;
+    font-size: 0.75rem;
+    color: rgba(253,250,242,0.45);
+    cursor: pointer;
+    transition: color 0.3s;
+  }
+
+  .footer-col ul li:hover { color: var(--gold-light); }
+
+  .footer-bottom {
+    border-top: 1px solid rgba(245,197,24,0.1);
+    padding-top: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .footer-copy {
+    font-size: 0.65rem;
+    color: rgba(253,250,242,0.25);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── MOBILE MENU ── */
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: var(--black);
+    z-index: 200;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+  }
+
+  .mobile-menu.open { display: flex; }
+
+  .mobile-menu a {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.2rem;
+    font-weight: 300;
+    color: var(--white);
+    text-decoration: none;
+    letter-spacing: 0.1em;
+    transition: color 0.3s;
+  }
+
+  .mobile-menu a:hover { color: var(--gold); }
+
+  .mobile-close {
+    position: absolute;
+    top: 1.5rem; right: 5%;
+    background: none;
+    border: none;
+    color: var(--gold);
+    font-size: 1.8rem;
+    cursor: pointer;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .nav-hamburger { display: flex; }
+
+    .hero { height: 85vh; min-height: 480px; }
+    .slide { padding: 6% 6% 12%; }
+    .hero-prev, .hero-next { display: none; }
+
+    .divider { padding: 2.5rem 5%; }
+
+    .products { padding: 0 5% 4rem; }
+
+    .product-row {
+      grid-template-columns: 1fr;
+      gap: 1.8rem;
+      margin-bottom: 4.5rem;
+    }
+
+    .product-row.reverse { direction: ltr; }
+
+    .product-img-wrap { aspect-ratio: 3/2; }
+
+    .product-desc { max-width: 100%; }
+
+    .review-card { min-width: 260px; max-width: 260px; }
+
+    .footer-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
+  }
+
+  @media (max-width: 480px) {
+    nav { padding: 0 4%; height: 60px; }
+    .nav-logo { font-size: 1.3rem; }
+    .hero { margin-top: 60px; height: 88vh; }
+    .slide-title { font-size: 1.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Honey Jewels</a>
+  <ul class="nav-links">
+    <li><a href="#">Home</a></li>
+    <li><a href="#">About</a></li>
+    <li><a href="#">Our Products</a></li>
+    <li><a href="#">Contact Us</a></li>
+  </ul>
+  <button class="nav-hamburger" onclick="document.querySelector('.mobile-menu').classList.add('open')" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE MENU -->
+<div class="mobile-menu">
+  <button class="mobile-close" onclick="document.querySelector('.mobile-menu').classList.remove('open')">✕</button>
+  <a href="#" onclick="document.querySelector('.mobile-menu').classList.remove('open')">Home</a>
+  <a href="#" onclick="document.querySelector('.mobile-menu').classList.remove('open')">About</a>
+  <a href="#" onclick="document.querySelector('.mobile-menu').classList.remove('open')">Our Products</a>
+  <a href="#" onclick="document.querySelector('.mobile-menu').classList.remove('open')">Contact Us</a>
+</div>
+
+<!-- HERO SLIDER -->
+<section class="hero">
+  <div class="slides" id="slides">
+
+    <div class="slide">
+      <div class="slide-bg"></div>
+      <div class="slide-orb slide-orb-1"></div>
+      <div class="slide-orb slide-orb-2"></div>
+      <div class="slide-content">
+        <p class="slide-label">New Collection — 2025</p>
+        <h1 class="slide-title">Worn by Women<br>who <em>Choose</em> Gold</h1>
+        <p class="slide-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sapiente nesciunt voluptatibus ipsum et quam dolorem.</p>
+        <a href="#our-pieces" class="btn-gold" onclick="event.preventDefault(); document.getElementById('our-pieces').scrollIntoView({behavior:'smooth'})">Explore the Collection</a>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-bg"></div>
+      <div class="slide-orb slide-orb-1"></div>
+      <div class="slide-content">
+        <p class="slide-label">Earrings — Handcrafted</p>
+        <h1 class="slide-title"><em>Light</em> that Hangs<br>from your Ears</h1>
+        <p class="slide-desc">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Optio reiciendis illum ut fugiat soluta ducimus voluptatem.</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-bg"></div>
+      <div class="slide-orb slide-orb-1"></div>
+      <div class="slide-content">
+        <p class="slide-label">Bracelets — Signature Line</p>
+        <h1 class="slide-title">A Story told<br>at your <em>Wrist</em></h1>
+        <p class="slide-desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio reiciendis illum ut fugiat soluta ducimus.</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-bg"></div>
+      <div class="slide-orb slide-orb-1"></div>
+      <div class="slide-content">
+        <p class="slide-label">Necklaces — Signature Piece</p>
+        <h1 class="slide-title">Close to the<br><em>Heart,</em> Always</h1>
+        <p class="slide-desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. Sapiente nesciunt voluptatibus ipsum et quam.</p>
+      </div>
+    </div>
+
+    <div class="slide">
+      <div class="slide-bg"></div>
+      <div class="slide-orb slide-orb-1"></div>
+      <div class="slide-content">
+        <p class="slide-label">Gift Sets — Special Occasion</p>
+        <h1 class="slide-title">The Perfect<br>Gift, <em>Gifted</em></h1>
+        <p class="slide-desc">Lorem ipsum dolor sit amet consectetur. Optio reiciendis illum ut fugiat soluta ducimus voluptatem.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <button class="hero-prev" onclick="changeSlide(-1)">&#8592;</button>
+  <button class="hero-next" onclick="changeSlide(1)">&#8594;</button>
+
+  <div class="hero-dots" id="dots">
+    <div class="dot active" onclick="goToSlide(0)"></div>
+    <div class="dot" onclick="goToSlide(1)"></div>
+    <div class="dot" onclick="goToSlide(2)"></div>
+    <div class="dot" onclick="goToSlide(3)"></div>
+    <div class="dot" onclick="goToSlide(4)"></div>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="divider" id="our-pieces">
+  <div class="divider-line"></div>
+  <span class="divider-text">Our Pieces</span>
+  <div class="divider-line"></div>
+</div>
+
+<!-- PRODUCTS -->
+<section class="products">
+
+  <!-- Row 1: image left, text right -->
+  <div class="product-row">
+    <div class="product-img-wrap">
+      <div class="product-img-inner">
+        <div class="product-placeholder"><div class="product-placeholder-icon"></div></div>
+      </div>
+      <span class="product-img-tag">Bestseller</span>
+    </div>
+    <div class="product-info">
+      <p class="product-tag">Earrings — Gold Drop</p>
+      <h2 class="product-name">The <em>Soleil</em><br>Drop Earrings</h2>
+      <p class="product-desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sapiente nesciunt voluptatibus ipsum et quam dolorem nobis accusamus magni perspiciatis veritatis eum, similique tempora.</p>
+    </div>
+  </div>
+
+  <!-- Row 2: text left, image right -->
+  <div class="product-row reverse">
+    <div class="product-img-wrap">
+      <div class="product-img-inner">
+        <div class="product-placeholder"><div class="product-placeholder-icon"></div></div>
+      </div>
+      <span class="product-img-tag">New In</span>
+    </div>
+    <div class="product-info">
+      <p class="product-tag">Bracelets — Woven Chain</p>
+      <h2 class="product-name">The <em>Aurore</em><br>Chain Bracelet</h2>
+      <p class="product-desc">Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio reiciendis illum ut fugiat soluta ducimus voluptatem. Sapiente nesciunt dolorem nobis accusamus perspiciatis.</p>
+    </div>
+  </div>
+
+  <!-- Row 3: image left, text right -->
+  <div class="product-row">
+    <div class="product-img-wrap">
+      <div class="product-img-inner">
+        <div class="product-placeholder"><div class="product-placeholder-icon"></div></div>
+      </div>
+      <span class="product-img-tag">New In</span>
+    </div>
+    <div class="product-info">
+      <p class="product-tag">Necklaces — Pendant</p>
+      <h2 class="product-name">The <em>Lumière</em><br>Pendant</h2>
+      <p class="product-desc">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sapiente nesciunt voluptatibus ipsum et quam dolorem nobis accusamus magni perspiciatis veritatis eum.</p>
+    </div>
+  </div>
+
+</section>
+
+<!-- REVIEWS -->
+<section class="reviews-section">
+  <div class="reviews-header">
+    <h2>What our <em>Customers</em> Say</h2>
+  </div>
+  <div class="reviews-track-wrap">
+    <div class="reviews-track" id="reviewTrack">
+      <!-- 50 reviews: 20×4★, 18×5★, 12×3★ — duplicated for seamless loop -->
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio reiciendis illum ut fugiat soluta ducimus."</p><p class="review-author">— Adaeze O.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Sapiente nesciunt voluptatibus ipsum et quam dolorem nobis accusamus magni perspiciatis veritatis."</p><p class="review-author">— Chisom N.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Reiciendis illum ut fugiat soluta ducimus."</p><p class="review-author">— Kemi A.</p></div>
+      <div class="review-card"><div class="review-stars">★★★☆☆</div><p class="review-text">"Adipisicing elit optio reiciendis illum ut fugiat. Soluta ducimus voluptatem nesciunt voluptatibus."</p><p class="review-author">— Ifeoma B.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Sapiente nesciunt voluptatibus et quam dolorem nobis accusamus. Lorem ipsum dolor sit amet."</p><p class="review-author">— Ngozi E.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Lorem ipsum dolor sit amet consectetur. Optio reiciendis illum ut fugiat soluta ducimus magni."</p><p class="review-author">— Temi F.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Nesciunt voluptatibus ipsum et quam dolorem nobis accusamus magni perspiciatis reiciendis veritatis."</p><p class="review-author">— Sola M.</p></div>
+      <div class="review-card"><div class="review-stars">★★★☆☆</div><p class="review-text">"Lorem ipsum dolor sit amet consectetur adipisicing. Sapiente nesciunt voluptatibus ipsum quam."</p><p class="review-author">— Bisi R.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Reiciendis illum ut fugiat soluta ducimus voluptatem. Lorem ipsum dolor sit amet consectetur."</p><p class="review-author">— Amara T.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Optio reiciendis illum ut fugiat soluta ducimus. Sapiente nesciunt voluptatibus ipsum et quam."</p><p class="review-author">— Zara I.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Consectetur adipisicing elit optio reiciendis. Illum ut fugiat soluta ducimus voluptatem magni."</p><p class="review-author">— Funmi L.</p></div>
+      <div class="review-card"><div class="review-stars">★★★☆☆</div><p class="review-text">"Dolorem nobis accusamus magni perspiciatis veritatis eum. Lorem ipsum dolor sit amet consectetur."</p><p class="review-author">— Yetunde K.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Sapiente nesciunt voluptatibus ipsum quam dolorem. Optio reiciendis illum fugiat soluta ducimus."</p><p class="review-author">— Halima D.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Lorem ipsum dolor sit amet. Consectetur adipisicing elit reiciendis illum ut fugiat soluta."</p><p class="review-author">— Uju P.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Voluptatem nesciunt voluptatibus ipsum et quam. Dolorem nobis accusamus perspiciatis veritatis eum."</p><p class="review-author">— Nkechi W.</p></div>
+      <div class="review-card"><div class="review-stars">★★★☆☆</div><p class="review-text">"Optio reiciendis illum ut fugiat soluta ducimus. Lorem ipsum dolor sit amet consectetur adipisicing."</p><p class="review-author">— Shade Q.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Magni perspiciatis veritatis eum similique tempora. Sapiente nesciunt voluptatibus ipsum et quam."</p><p class="review-author">— Remi C.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Illum ut fugiat soluta ducimus voluptatem. Lorem ipsum dolor sit amet consectetur adipisicing elit."</p><p class="review-author">— Toyin V.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Accusamus magni perspiciatis veritatis eum. Sapiente nesciunt voluptatibus ipsum quam dolorem nobis."</p><p class="review-author">— Ebele S.</p></div>
+      <div class="review-card"><div class="review-stars">★★★☆☆</div><p class="review-text">"Lorem ipsum dolor sit amet consectetur. Reiciendis illum ut fugiat soluta ducimus voluptatem."</p><p class="review-author">— Chiamaka J.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Nesciunt voluptatibus ipsum et quam. Dolorem nobis accusamus magni perspiciatis reiciendis veritatis."</p><p class="review-author">— Lola H.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Adipisicing elit optio reiciendis illum. Ut fugiat soluta ducimus voluptatem nesciunt voluptatibus."</p><p class="review-author">— Bukola G.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Sapiente nesciunt voluptatibus ipsum et quam dolorem. Nobis accusamus magni perspiciatis veritatis."</p><p class="review-author">— Nneka U.</p></div>
+      <div class="review-card"><div class="review-stars">★★★☆☆</div><p class="review-text">"Lorem ipsum dolor sit amet consectetur adipisicing. Illum ut fugiat soluta ducimus voluptatem."</p><p class="review-author">— Damilola X.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Reiciendis illum ut fugiat soluta. Ducimus voluptatem sapiente nesciunt voluptatibus ipsum quam."</p><p class="review-author">— Aisha M.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Dolorem nobis accusamus magni perspiciatis. Lorem ipsum dolor sit amet consectetur adipisicing elit."</p><p class="review-author">— Precious Y.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Optio reiciendis illum ut fugiat. Soluta ducimus voluptatem nesciunt voluptatibus ipsum et quam."</p><p class="review-author">— Chinwe Z.</p></div>
+      <div class="review-card"><div class="review-stars">★★★☆☆</div><p class="review-text">"Ipsum et quam dolorem nobis accusamus. Lorem ipsum dolor sit amet consectetur adipisicing elit."</p><p class="review-author">— Folake T.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Veritatis eum similique tempora sapiente nesciunt. Voluptatibus ipsum et quam dolorem nobis."</p><p class="review-author">— Grace A.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Fugiat soluta ducimus voluptatem nesciunt. Lorem ipsum dolor sit amet consectetur adipisicing elit."</p><p class="review-author">— Obiageli R.</p></div>
+      <!-- 20 new reviews -->
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Perspiciatis veritatis eum similique tempora. Sapiente nesciunt voluptatibus ipsum quam dolorem nobis."</p><p class="review-author">— Ifunanya C.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Lorem ipsum dolor sit amet consectetur. Ducimus voluptatem nesciunt voluptatibus ipsum et quam."</p><p class="review-author">— Tolani B.</p></div>
+      <div class="review-card"><div class="review-stars">★★★☆☆</div><p class="review-text">"Accusamus magni perspiciatis veritatis eum. Optio reiciendis illum ut fugiat soluta consectetur."</p><p class="review-author">— Maureen O.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Adipisicing elit reiciendis illum ut fugiat. Sapiente nesciunt voluptatibus ipsum et quam dolorem."</p><p class="review-author">— Sandra E.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Soluta ducimus voluptatem nesciunt. Lorem ipsum dolor sit amet consectetur adipisicing elit reiciendis."</p><p class="review-author">— Vivian N.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Quam dolorem nobis accusamus magni. Perspiciatis veritatis eum similique tempora sapiente nesciunt."</p><p class="review-author">— Blessing A.</p></div>
+      <div class="review-card"><div class="review-stars">★★★☆☆</div><p class="review-text">"Lorem ipsum dolor sit amet. Adipisicing elit optio reiciendis illum ut fugiat soluta ducimus."</p><p class="review-author">— Rhoda I.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Voluptatibus ipsum et quam dolorem nobis. Accusamus magni perspiciatis veritatis eum similique."</p><p class="review-author">— Josephine K.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Nesciunt voluptatibus ipsum quam dolorem. Lorem ipsum dolor sit amet consectetur adipisicing reiciendis."</p><p class="review-author">— Amaka P.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Illum ut fugiat soluta ducimus voluptatem. Sapiente nesciunt voluptatibus ipsum et quam dolorem."</p><p class="review-author">— Stella W.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Reiciendis illum ut fugiat soluta. Lorem ipsum dolor sit amet consectetur adipisicing elit ducimus."</p><p class="review-author">— Chidera F.</p></div>
+      <div class="review-card"><div class="review-stars">★★★☆☆</div><p class="review-text">"Dolorem nobis accusamus perspiciatis. Sapiente nesciunt voluptatibus ipsum et quam reiciendis illum."</p><p class="review-author">— Patience L.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Lorem ipsum dolor sit amet consectetur adipisicing. Perspiciatis veritatis eum similique tempora."</p><p class="review-author">— Eunice D.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Magni perspiciatis veritatis eum. Ut fugiat soluta ducimus voluptatem nesciunt voluptatibus ipsum."</p><p class="review-author">— Adanna T.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Sapiente nesciunt voluptatibus ipsum. Lorem ipsum dolor sit amet consectetur adipisicing elit optio."</p><p class="review-author">— Ogechi S.</p></div>
+      <div class="review-card"><div class="review-stars">★★★☆☆</div><p class="review-text">"Optio reiciendis illum fugiat soluta. Ducimus voluptatem nesciunt voluptatibus ipsum et quam dolorem."</p><p class="review-author">— Miriam Q.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Consectetur adipisicing elit. Lorem ipsum dolor sit amet reiciendis illum ut fugiat soluta ducimus."</p><p class="review-author">— Adaora H.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Quam dolorem nobis accusamus magni perspiciatis. Lorem ipsum dolor sit amet consectetur adipisicing."</p><p class="review-author">— Uche V.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Illum ut fugiat soluta ducimus. Sapiente nesciunt voluptatibus ipsum quam dolorem nobis accusamus."</p><p class="review-author">— Nonso G.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Veritatis eum similique tempora. Lorem ipsum dolor sit amet consectetur adipisicing elit reiciendis."</p><p class="review-author">— Onyeka M.</p></div>
+      <!-- duplicate set for seamless infinite loop -->
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Lorem ipsum dolor sit amet consectetur adipisicing elit. Optio reiciendis illum ut fugiat soluta ducimus."</p><p class="review-author">— Adaeze O.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Sapiente nesciunt voluptatibus ipsum et quam dolorem nobis accusamus magni perspiciatis veritatis."</p><p class="review-author">— Chisom N.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Reiciendis illum ut fugiat soluta ducimus."</p><p class="review-author">— Kemi A.</p></div>
+      <div class="review-card"><div class="review-stars">★★★☆☆</div><p class="review-text">"Adipisicing elit optio reiciendis illum ut fugiat. Soluta ducimus voluptatem nesciunt voluptatibus."</p><p class="review-author">— Ifeoma B.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Sapiente nesciunt voluptatibus et quam dolorem nobis accusamus. Lorem ipsum dolor sit amet."</p><p class="review-author">— Ngozi E.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Lorem ipsum dolor sit amet consectetur. Optio reiciendis illum ut fugiat soluta ducimus magni."</p><p class="review-author">— Temi F.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Nesciunt voluptatibus ipsum et quam dolorem nobis accusamus magni perspiciatis reiciendis veritatis."</p><p class="review-author">— Sola M.</p></div>
+      <div class="review-card"><div class="review-stars">★★★☆☆</div><p class="review-text">"Lorem ipsum dolor sit amet consectetur adipisicing. Sapiente nesciunt voluptatibus ipsum quam."</p><p class="review-author">— Bisi R.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Reiciendis illum ut fugiat soluta ducimus voluptatem. Lorem ipsum dolor sit amet consectetur."</p><p class="review-author">— Amara T.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Optio reiciendis illum ut fugiat soluta ducimus. Sapiente nesciunt voluptatibus ipsum et quam."</p><p class="review-author">— Zara I.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Consectetur adipisicing elit optio reiciendis. Illum ut fugiat soluta ducimus voluptatem magni."</p><p class="review-author">— Funmi L.</p></div>
+      <div class="review-card"><div class="review-stars">★★★☆☆</div><p class="review-text">"Dolorem nobis accusamus magni perspiciatis veritatis eum. Lorem ipsum dolor sit amet consectetur."</p><p class="review-author">— Yetunde K.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Sapiente nesciunt voluptatibus ipsum quam dolorem. Optio reiciendis illum fugiat soluta ducimus."</p><p class="review-author">— Halima D.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Lorem ipsum dolor sit amet. Consectetur adipisicing elit reiciendis illum ut fugiat soluta."</p><p class="review-author">— Uju P.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Voluptatem nesciunt voluptatibus ipsum et quam. Dolorem nobis accusamus perspiciatis veritatis eum."</p><p class="review-author">— Nkechi W.</p></div>
+      <div class="review-card"><div class="review-stars">★★★☆☆</div><p class="review-text">"Optio reiciendis illum ut fugiat soluta ducimus. Lorem ipsum dolor sit amet consectetur adipisicing."</p><p class="review-author">— Shade Q.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Magni perspiciatis veritatis eum similique tempora. Sapiente nesciunt voluptatibus ipsum et quam."</p><p class="review-author">— Remi C.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Illum ut fugiat soluta ducimus voluptatem. Lorem ipsum dolor sit amet consectetur adipisicing elit."</p><p class="review-author">— Toyin V.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Accusamus magni perspiciatis veritatis eum. Sapiente nesciunt voluptatibus ipsum quam dolorem nobis."</p><p class="review-author">— Ebele S.</p></div>
+      <div class="review-card"><div class="review-stars">★★★☆☆</div><p class="review-text">"Lorem ipsum dolor sit amet consectetur. Reiciendis illum ut fugiat soluta ducimus voluptatem."</p><p class="review-author">— Chiamaka J.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Nesciunt voluptatibus ipsum et quam. Dolorem nobis accusamus magni perspiciatis reiciendis veritatis."</p><p class="review-author">— Lola H.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Adipisicing elit optio reiciendis illum. Ut fugiat soluta ducimus voluptatem nesciunt voluptatibus."</p><p class="review-author">— Bukola G.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Sapiente nesciunt voluptatibus ipsum et quam dolorem. Nobis accusamus magni perspiciatis veritatis."</p><p class="review-author">— Nneka U.</p></div>
+      <div class="review-card"><div class="review-stars">★★★☆☆</div><p class="review-text">"Lorem ipsum dolor sit amet consectetur adipisicing. Illum ut fugiat soluta ducimus voluptatem."</p><p class="review-author">— Damilola X.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Reiciendis illum ut fugiat soluta. Ducimus voluptatem sapiente nesciunt voluptatibus ipsum quam."</p><p class="review-author">— Aisha M.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Dolorem nobis accusamus magni perspiciatis. Lorem ipsum dolor sit amet consectetur adipisicing elit."</p><p class="review-author">— Precious Y.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Optio reiciendis illum ut fugiat. Soluta ducimus voluptatem nesciunt voluptatibus ipsum et quam."</p><p class="review-author">— Chinwe Z.</p></div>
+      <div class="review-card"><div class="review-stars">★★★☆☆</div><p class="review-text">"Ipsum et quam dolorem nobis accusamus. Lorem ipsum dolor sit amet consectetur adipisicing elit."</p><p class="review-author">— Folake T.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Veritatis eum similique tempora sapiente nesciunt. Voluptatibus ipsum et quam dolorem nobis."</p><p class="review-author">— Grace A.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Fugiat soluta ducimus voluptatem nesciunt. Lorem ipsum dolor sit amet consectetur adipisicing elit."</p><p class="review-author">— Obiageli R.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Perspiciatis veritatis eum similique tempora. Sapiente nesciunt voluptatibus ipsum quam dolorem nobis."</p><p class="review-author">— Ifunanya C.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Lorem ipsum dolor sit amet consectetur. Ducimus voluptatem nesciunt voluptatibus ipsum et quam."</p><p class="review-author">— Tolani B.</p></div>
+      <div class="review-card"><div class="review-stars">★★★☆☆</div><p class="review-text">"Accusamus magni perspiciatis veritatis eum. Optio reiciendis illum ut fugiat soluta consectetur."</p><p class="review-author">— Maureen O.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Adipisicing elit reiciendis illum ut fugiat. Sapiente nesciunt voluptatibus ipsum et quam dolorem."</p><p class="review-author">— Sandra E.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Soluta ducimus voluptatem nesciunt. Lorem ipsum dolor sit amet consectetur adipisicing elit reiciendis."</p><p class="review-author">— Vivian N.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Quam dolorem nobis accusamus magni. Perspiciatis veritatis eum similique tempora sapiente nesciunt."</p><p class="review-author">— Blessing A.</p></div>
+      <div class="review-card"><div class="review-stars">★★★☆☆</div><p class="review-text">"Lorem ipsum dolor sit amet. Adipisicing elit optio reiciendis illum ut fugiat soluta ducimus."</p><p class="review-author">— Rhoda I.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Voluptatibus ipsum et quam dolorem nobis. Accusamus magni perspiciatis veritatis eum similique."</p><p class="review-author">— Josephine K.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Nesciunt voluptatibus ipsum quam dolorem. Lorem ipsum dolor sit amet consectetur adipisicing reiciendis."</p><p class="review-author">— Amaka P.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Illum ut fugiat soluta ducimus voluptatem. Sapiente nesciunt voluptatibus ipsum et quam dolorem."</p><p class="review-author">— Stella W.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Reiciendis illum ut fugiat soluta. Lorem ipsum dolor sit amet consectetur adipisicing elit ducimus."</p><p class="review-author">— Chidera F.</p></div>
+      <div class="review-card"><div class="review-stars">★★★☆☆</div><p class="review-text">"Dolorem nobis accusamus perspiciatis. Sapiente nesciunt voluptatibus ipsum et quam reiciendis illum."</p><p class="review-author">— Patience L.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Lorem ipsum dolor sit amet consectetur adipisicing. Perspiciatis veritatis eum similique tempora."</p><p class="review-author">— Eunice D.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Magni perspiciatis veritatis eum. Ut fugiat soluta ducimus voluptatem nesciunt voluptatibus ipsum."</p><p class="review-author">— Adanna T.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Sapiente nesciunt voluptatibus ipsum. Lorem ipsum dolor sit amet consectetur adipisicing elit optio."</p><p class="review-author">— Ogechi S.</p></div>
+      <div class="review-card"><div class="review-stars">★★★☆☆</div><p class="review-text">"Optio reiciendis illum fugiat soluta. Ducimus voluptatem nesciunt voluptatibus ipsum et quam dolorem."</p><p class="review-author">— Miriam Q.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Consectetur adipisicing elit. Lorem ipsum dolor sit amet reiciendis illum ut fugiat soluta ducimus."</p><p class="review-author">— Adaora H.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★★</div><p class="review-text">"Quam dolorem nobis accusamus magni perspiciatis. Lorem ipsum dolor sit amet consectetur adipisicing."</p><p class="review-author">— Uche V.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Illum ut fugiat soluta ducimus. Sapiente nesciunt voluptatibus ipsum quam dolorem nobis accusamus."</p><p class="review-author">— Nonso G.</p></div>
+      <div class="review-card"><div class="review-stars">★★★★☆</div><p class="review-text">"Veritatis eum similique tempora. Lorem ipsum dolor sit amet consectetur adipisicing elit reiciendis."</p><p class="review-author">— Onyeka M.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <p class="footer-brand">Honey Jewels</p>
+      <p class="footer-tagline">Lorem ipsum dolor sit amet consectetur adipisicing elit. Reiciendis illum ut fugiat soluta ducimus voluptatem nesciunt.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Navigate</h4>
+      <ul>
+        <li>Home</li>
+        <li>About Us</li>
+        <li>Our Products</li>
+        <li>Contact</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p class="footer-copy">© 2025 Honey Jewels. All rights reserved.</p>
+    <p class="footer-copy">Made with care.</p>
+  </div>
+</footer>
+
+<script>
+  let current = 0;
+  const total = 5;
+  const slidesEl = document.getElementById('slides');
+  const dotsEl = document.querySelectorAll('.dot');
+
+  function goToSlide(n) {
+    current = (n + total) % total;
+    slidesEl.style.transform = `translateX(-${current * 100}%)`;
+    dotsEl.forEach((d, i) => d.classList.toggle('active', i === current));
+  }
+
+  function changeSlide(dir) { goToSlide(current + dir); }
+
+  setInterval(() => changeSlide(1), 5000);
+</script>
+</body>
+</html>
